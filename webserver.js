@@ -1,7 +1,7 @@
 
 /****** Base Config ****************************************************/
 
-const WebPort      = 80;      // HTTP Server Port
+const WebPort      = 80;    // HTTP Server Port
 var   GPIOName     = "GPIO";  // See siteconfig.js - has to be the same!
 var   GPIONameT    = "TGPIO"; // See siteconfig.js - has to be the same!
 
@@ -46,7 +46,6 @@ GPIOEnabled[27] = 1; // Enable (1) or Disable (0) GPIO pin 27 for processing
 
 /****** VARIABLES ******************************************************/
 
-var UseGPIO     = {};
 var GPIOMapping = {};
 var GPIOvalue   = {};
 
@@ -108,12 +107,13 @@ if (GPIOEnabled[27] === 1) { GPIOvalue[27] = 0; } // Turn off GPIO 27 by default
 
 /*************** Load Moudles and Variables ***************************/
 
-var http = require('http').createServer(handler); //require http server, and create server with function handler()
-var fs   = require('fs'); //require filesystem module
-var url  = require('url');
-var path = require('path');
-var io   = require('socket.io','net')(http) //require socket.io module and pass the http object (server)
-var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
+var http    = require('http').createServer(handler); //require http server, and create server with function handler()
+var fs      = require('fs'); //require filesystem module
+var url     = require('url');
+var path    = require('path');
+var io      = require('socket.io','net')(http) //require socket.io module and pass the http object (server)
+var Gpio    = require('onoff').Gpio; //include onoff to interact with the GPIO
+var UseGPIO = {};
 
 if (GPIOEnabled[2]  === 1) { UseGPIO[2]  = new Gpio(GPIOMapping[2], 'out'); } // use GPIO pin 2 as output
 if (GPIOEnabled[3]  === 1) { UseGPIO[3]  = new Gpio(GPIOMapping[3], 'out'); } // use GPIO pin 3 as output
@@ -174,34 +174,6 @@ http.listen(WebPort, function() {  // This gets call when the web server is firs
 	if (GPIOEnabled[26] === 1) { UseGPIO[26].writeSync(GPIOvalue[26]); } // Turn on/off GPIO 26 by default
 	if (GPIOEnabled[27] === 1) { UseGPIO[27].writeSync(GPIOvalue[27]); } // Turn on/off GPIO 27 by default
 
-/*
-	if (GPIOEnabled[2]  === 1) { UseGPIO[2].readSync(); }   // Turn on/off GPIO 2 by default
-	if (GPIOEnabled[3]  === 1) { UseGPIO[3].readSync(); }   // Turn on/off GPIO 3 by default
-	if (GPIOEnabled[4]  === 1) { UseGPIO[4].readSync(); }   // Turn on/off GPIO 4 by default
-	if (GPIOEnabled[5]  === 1) { UseGPIO[5].readSync(); }   // Turn on/off GPIO 5 by default
-	if (GPIOEnabled[6]  === 1) { UseGPIO[6].readSync(); }   // Turn on/off GPIO 6 by default
-	if (GPIOEnabled[7]  === 1) { UseGPIO[7].readSync(); }   // Turn on/off GPIO 7 by default
-	if (GPIOEnabled[8]  === 1) { UseGPIO[8].readSync(); }   // Turn on/off GPIO 8 by default
-	if (GPIOEnabled[9]  === 1) { UseGPIO[9].readSync(); }   // Turn on/off GPIO 9 by default
-	if (GPIOEnabled[10] === 1) { UseGPIO[10].readSync(); } // Turn on/off GPIO 10 by default
-	if (GPIOEnabled[11] === 1) { UseGPIO[11].readSync(); } // Turn on/off GPIO 11 by default
-	if (GPIOEnabled[12] === 1) { UseGPIO[12].readSync(); } // Turn on/off GPIO 12 by default
-	if (GPIOEnabled[13] === 1) { UseGPIO[13].readSync(); } // Turn on/off GPIO 13 by default
-	if (GPIOEnabled[14] === 1) { UseGPIO[14].readSync(); } // Turn on/off GPIO 14 by default
-	if (GPIOEnabled[15] === 1) { UseGPIO[15].readSync(); } // Turn on/off GPIO 15 by default
-	if (GPIOEnabled[16] === 1) { UseGPIO[16].readSync(); } // Turn on/off GPIO 16 by default
-	if (GPIOEnabled[17] === 1) { UseGPIO[17].readSync(); } // Turn on/off GPIO 17 by default
-	if (GPIOEnabled[18] === 1) { UseGPIO[18].readSync(); } // Turn on/off GPIO 18 by default
-	if (GPIOEnabled[19] === 1) { UseGPIO[19].readSync(); } // Turn on/off GPIO 19 by default
-	if (GPIOEnabled[20] === 1) { UseGPIO[20].readSync(); } // Turn on/off GPIO 20 by default
-	if (GPIOEnabled[21] === 1) { UseGPIO[21].readSync(); } // Turn on/off GPIO 21 by default
-	if (GPIOEnabled[22] === 1) { UseGPIO[22].readSync(); } // Turn on/off GPIO 22 by default
-	if (GPIOEnabled[23] === 1) { UseGPIO[23].readSync(); } // Turn on/off GPIO 23 by default
-	if (GPIOEnabled[24] === 1) { UseGPIO[24].readSync(); } // Turn on/off GPIO 24 by default
-	if (GPIOEnabled[25] === 1) { UseGPIO[25].readSync(); } // Turn on/off GPIO 25 by default
-	if (GPIOEnabled[26] === 1) { UseGPIO[26].readSync(); } // Turn on/off GPIO 26 by default
-	if (GPIOEnabled[27] === 1) { UseGPIO[27].readSync(); } // Turn on/off GPIO 27 by default
-*/
 	console.log('Server running on Port '+WebPort);
 	if (GPIOEnabled[2]  === 1) { console.log(GPIOName+'2 = '+GPIOvalue[2]); }
 	if (GPIOEnabled[3]  === 1) { console.log(GPIOName+'3 = '+GPIOvalue[3]); }
@@ -232,7 +204,6 @@ http.listen(WebPort, function() {  // This gets call when the web server is firs
 
 	} 
 ); 
-
 
 
 // function handler is called whenever a client makes an http request to the server
@@ -272,8 +243,6 @@ function handler (req, res) {
 	    break;
     }
     
-
-    
     fs.readFile(__dirname + '/public/' + filename, function(err, content) {
 	if(err) {
 	    console.log('File not found. Filename='+filename);
@@ -288,13 +257,12 @@ function handler (req, res) {
 	    return res.end(content,'utf8');
 	}
     });
-      
 }
 
 
 // Execute this when web server is terminated
 process.on('SIGINT', function () { // on ctrl+c
-/*  
+  
 	if (GPIOEnabled[2]  === 1) { UseGPIO[2].writeSync(0); }  // Turn Off GPIO 2
 	if (GPIOEnabled[2]  === 1) { UseGPIO[2].unexport(); }    // Unexport GPIO 2 to free resources
 	if (GPIOEnabled[3]  === 1) { UseGPIO[3].writeSync(0); }  // Turn Off GPIO 3
@@ -347,7 +315,7 @@ process.on('SIGINT', function () { // on ctrl+c
 	if (GPIOEnabled[26] === 1) { UseGPIO[26].unexport(); }   // Unexport GPIO 26 to free resources
 	if (GPIOEnabled[27] === 1) { UseGPIO[27].writeSync(0); } // Turn Off GPIO 27
 	if (GPIOEnabled[27] === 1) { UseGPIO[27].unexport(); }   // Unexport GPIO 27 to free resources
-*/
+
 	process.exit(); // exit completely
 }); 
 
@@ -384,7 +352,6 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
 	if (GPIOEnabled[26] === 1) { socket.emit(GPIOName+'26', GPIOvalue[26]); }
 	if (GPIOEnabled[27] === 1) { socket.emit(GPIOName+'27', GPIOvalue[27]); }
 
-
 	function ToggleButton(GPIOvalue,UseGPIO,GPIONumber,data) {
 		var UseGPIONumber = 'GPIO'+GPIONumber;
 		// console.log('ToggleButton: '+UseGPIONumber+' value='+GPIOvalue[GPIONumber]);
@@ -406,7 +373,6 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
 	    io.emit(UseGPIONumber, GPIOvalue[GPIONumber]); //send button status to ALL clients 
 		};
 	};
- 
 
 	if (GPIOEnabled[2]  === 1) { socket.on(GPIONameT+'2', function(data) {ToggleButton(GPIOvalue,UseGPIO,2)}); }
 	if (GPIOEnabled[2]  === 1) { socket.on(GPIOName+'2', function(data) {MomentaryButton(GPIOvalue,UseGPIO,2,data)}); }
@@ -465,12 +431,4 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     socket.on('disconnect', function () {
 	console.log('A user disconnected');
     });
-    
-
 }); 
-
-
- 
-
-
-
