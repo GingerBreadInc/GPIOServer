@@ -1,9 +1,16 @@
 
 /****** Base Config ****************************************************/
 
-const WebPort      = 80;    // HTTP Server Port
-var   GPIOName     = "GPIO";  // See siteconfig.js - has to be the same!
-var   GPIONameT    = "TGPIO"; // See siteconfig.js - has to be the same!
+const WebPort   = 80;      // HTTP Server Port
+var   GPIOName  = "GPIO";  // See siteconfig.js - has to be the same!
+var   GPIONameT = "TGPIO"; // See siteconfig.js - has to be the same!
+
+/* if you want to run WebPort on a port lower than 1024 without running
+ * node as root, you need to run following from a terminal on the pi
+ * sudo apt update
+ * sudo apt install libcap2-bin
+ * sudo setcap cap_net_bind_service=+ep /usr/local/bin/node
+ */
 
 // Here you can really enable/disable GPIOs for processing, its
 // important when you use a HAT like GeekWorm KVM-A3 or something else.
@@ -36,13 +43,6 @@ GPIOEnabled[24] = 1; // Enable (1) or Disable (0) GPIO pin 24 for processing
 GPIOEnabled[25] = 1; // Enable (1) or Disable (0) GPIO pin 25 for processing
 GPIOEnabled[26] = 1; // Enable (1) or Disable (0) GPIO pin 26 for processing
 GPIOEnabled[27] = 1; // Enable (1) or Disable (0) GPIO pin 27 for processing
-
-/* if you want to run WebPort on a port lower than 1024 without running
- * node as root, you need to run following from a terminal on the pi
- * sudo apt update
- * sudo apt install libcap2-bin
- * sudo setcap cap_net_bind_service=+ep /usr/local/bin/node
- */
 
 /****** VARIABLES ******************************************************/
 
