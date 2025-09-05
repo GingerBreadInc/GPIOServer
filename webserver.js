@@ -1,7 +1,7 @@
 
 /****** Base Config ****************************************************/
 
-const WebPort      = 80;    // HTTP Server Port
+const WebPort      = 80;      // HTTP Server Port
 var   GPIOName     = "GPIO";  // See siteconfig.js - has to be the same!
 var   GPIONameT    = "TGPIO"; // See siteconfig.js - has to be the same!
 
